@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JWT Example</title>
+  </head>
+  <body>
+    <!-- ボタンと結果を表示する領域 -->
+    <button id="fetchButton">Fetch Data from :3000</button>
+    <button id="fetchButton3001">Fetch Data from :3001</button>
+    <button id="fetchButton3002">Fetch Data from :3002</button>
+    <div id="result"></div>
+    <div id="result3001"></div>
+    <div id="result3002"></div>
+
+    <script>
+      let jwt_token = null
+
+      const fetchButton = document.getElementById("fetchButton")
+      const fetchButton3001 = document.getElementById("fetchButton3001")
+      const fetchButton3002 = document.getElementById("fetchButton3002")
+
+      const resultDiv = document.getElementById("result")
+      const resultDiv3001 = document.getElementById("result3001")
+      const resultDiv3002 = document.getElementById("result3002")
+
+      fetchButton.addEventListener("click", function () {
+        fetch("http://localhost:3000/")
+          .then((response) => {
+            return response.json()
+          })
+          .then((data) => {
+            jwt_token = data.token
+            resultDiv.innerHTML = `<p>${jwt_token}</p>`
+          })
+      })
+
+      fetchButton3001.addEventListener("click", function () {
+        console.log(jwt_token)
+        fetch("http://localhost:3001/", {
+          headers: {
+            Authorization: `${jwt_token}`,
+          },
+        })
+          .then((response) => {
+            return response.json()
+          })
+          .then((data) => {
+            resultDiv3001.innerHTML = `<p>${JSON.stringify(data)}</p>`
+          })
+      })
+
+      fetchButton3002.addEventListener("click", function () {
+        fetch("http://localhost:3002/", {
+          headers: {
+            Authorization: `${jwt_token}`,
+          },
+        })
+          .then((response) => {
+            return response.json()
+          })
+          .then((data) => {
+            resultDiv3002.innerHTML = `<p>${JSON.stringify(data)}</p>`
+          })
+      })
+    </script>
+  </body>
+</html>
