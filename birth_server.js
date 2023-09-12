@@ -5,7 +5,15 @@ const base64url = require("base64url")
 const secret = "waiwaio"
 
 const server = http.createServer((req, res) => {
-  const jwtToken = req.headers["Authorization"]
+  res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Content-Type", "application/json")
+  res.setHeader("Access-Control-Allow-Headers", "Authorization")
+
+  const jwtToken = req.headers["authorization"]
+
+  if (!jwtToken) {
+    return res.end(JSON.stringify({ message: "No JWT token provided" }))
+  }
 
   const [headerBase64, payloadBase64, signatureBase64] = jwtToken.split(".")
 
@@ -17,7 +25,6 @@ const server = http.createServer((req, res) => {
     .digest("base64")
 
   if (receivedSignature !== calculatedSignature) {
-    res.writeHead(401, { "Content-Type": "application/json" })
     return res.end(JSON.stringify({ message: "Invalid JWT" }))
   }
 
@@ -31,10 +38,6 @@ const server = http.createServer((req, res) => {
     message: "you are " + age + " years old.",
   }
 
-  res.setHeader("Access-Control-Allow-Origin", "*")
-  res.writeHead(200, {
-    "Content-Type": "application/json",
-  })
   res.end(JSON.stringify(jsonResponse))
 })
 

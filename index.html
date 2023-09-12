@@ -37,6 +37,7 @@
 
       fetchButton3001.addEventListener("click", function () {
         console.log(jwt_token)
+        console.log("typeof jwt_token")
         fetch("http://localhost:3001/", {
           headers: {
             Authorization: `${jwt_token}`,
