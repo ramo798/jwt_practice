@@ -6,12 +6,20 @@
   </head>
   <body>
     <!-- ボタンと結果を表示する領域 -->
-    <button id="fetchButton">Fetch Data from :3000</button>
-    <button id="fetchButton3001">Fetch Data from :3001</button>
-    <button id="fetchButton3002">Fetch Data from :3002</button>
+    <button id="fetchButton">jwtを受け取る</button>
     <div id="result"></div>
+
+    <button id="fetchButton3001">neet_auth_serverへJWT有りでGETする</button>
     <div id="result3001"></div>
+
+    <button id="fetchButton3001false">neet_auth_serverへJWT無しでGETする</button>
+    <div id="result3001false"></div>
+
+    <button id="fetchButton3002">birst_serverへJWT有りでGETする</button>
     <div id="result3002"></div>
+
+    <button id="fetchButton3002false">birst_serverへ改ざんJWTでGETする</button>
+    <div id="result3002false"></div>
 
     <script>
       let jwt_token = null
@@ -19,10 +27,14 @@
       const fetchButton = document.getElementById("fetchButton")
       const fetchButton3001 = document.getElementById("fetchButton3001")
       const fetchButton3002 = document.getElementById("fetchButton3002")
+      const fetchButton3001false = document.getElementById("fetchButton3001false")
+      const fetchButton3002false = document.getElementById("fetchButton3002false")
 
       const resultDiv = document.getElementById("result")
       const resultDiv3001 = document.getElementById("result3001")
       const resultDiv3002 = document.getElementById("result3002")
+      const resultDiv3001false = document.getElementById("result3001false")
+      const resultDiv3002false = document.getElementById("result3002false")
 
       fetchButton.addEventListener("click", function () {
         fetch("http://localhost:3000/")
@@ -51,6 +63,18 @@
           })
       })
 
+      fetchButton3001false.addEventListener("click", function () {
+        console.log(jwt_token)
+        console.log("typeof jwt_token")
+        fetch("http://localhost:3001/", {})
+          .then((response) => {
+            return response.json()
+          })
+          .then((data) => {
+            resultDiv3001false.innerHTML = `<p>${JSON.stringify(data)}</p>`
+          })
+      })
+
       fetchButton3002.addEventListener("click", function () {
         fetch("http://localhost:3002/", {
           headers: {
@@ -62,6 +86,20 @@
           })
           .then((data) => {
             resultDiv3002.innerHTML = `<p>${JSON.stringify(data)}</p>`
+          })
+      })
+
+      fetchButton3002false.addEventListener("click", function () {
+        fetch("http://localhost:3002/", {
+          headers: {
+            Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3N1ZXIiOiJodHRwczovL2V4YW1wbGUuY29tIiwic3ViIjoibXVyYW1vdG8xMjNAcmFjY29vbi5uZS5qcCIsImJpcnRoZGF5IjoiMTk5MC0wNS0xMSIsImV4cCI6MTUxNjIzOTAyMn0.nMbDGrDtAu1kuOFdgk9GR2Z0xFrikwxezq0UJ4ENPGg}",
+          },
+        })
+          .then((response) => {
+            return response.json()
+          })
+          .then((data) => {
+            resultDiv3002false.innerHTML = `<p>${JSON.stringify(data)}</p>`
           })
       })
     </script>
